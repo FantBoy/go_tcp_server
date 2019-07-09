@@ -20,10 +20,6 @@ type ComplexData struct {
 	C *ComplexData
 }
 
-const (
-	Port = ":4567" // 服务端接受的端口
-)
-
 /**
 net.Conn 实现了io.Reader  io.Writer  io.Closer接口
 Open 返回一个有超时的TCP链接缓冲readwrite
@@ -92,11 +88,14 @@ func (e *TcpServer) handleMessage(conn net.Conn) {
 	}
 }
 
-func (e *TcpServer) Listen() error {
+func (e *TcpServer) Listen(cfg map[string]string) error {
+	//var port int
 	var err error
-	e.listener, err = net.Listen("tcp", Port)
+	//port, err = strconv.Atoi(cfg["Port"])
+
+	e.listener, err = net.Listen("tcp", cfg["port"])
 	if err != nil {
-		return errors.Wrap(err, "TCP服务无法监听在端口"+Port)
+		return errors.Wrap(err, "TCP服务无法监听在端口"+cfg["port"])
 	}
 	fmt.Println(" 服务监听成功：", e.listener.Addr().String())
 	for {
